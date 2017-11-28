@@ -1,0 +1,12 @@
+{
+  "list": [
+    {
+      "Name": "Sword",
+      "Base": "Agility"
+    },
+    {
+      "Name": "Club",
+      "Base": "Strength"
+    }
+  ]
+}

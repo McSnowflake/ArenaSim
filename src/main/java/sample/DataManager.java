@@ -18,7 +18,7 @@ abstract class DataManager<T> {
         openJSON(path2json);
     }
 
-    public List<T> getList() {
+    public ArrayList<T> getList() {
         return objectList;
     }
 
@@ -40,6 +40,7 @@ abstract class DataManager<T> {
             objectList.add((T)elements.get(i));
         }
         // docode to list
+        return json;
     }
 
 }
