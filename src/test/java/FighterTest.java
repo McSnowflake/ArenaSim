@@ -7,14 +7,15 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FighterTest {
 
-    private static String pathToSample = "sample/fighter_test.json";
+    private static String pathToSample = "src/test/resources/fighter_test.json";
     private Fighter warrior = new Fighter("Warrior", 12, 8, 21, 3);
-    private Fighter roque = new Fighter("Rogue", 9, 12, 17, 2);
+    private Fighter rogue = new Fighter("Rogue", 9, 12, 17, 2);
 
     @BeforeTest
     public void cleanUp() {
@@ -25,12 +26,15 @@ public class FighterTest {
     }
 
     @Test
-    public void generationTest() {
+    public void generationTest() throws IOException {
 
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
+
+        Assert.assertEquals(fighterManager.getList().size(), 0);
+
         fighterManager.add(warrior);
-        fighterManager.add(roque);
-        fighterManager.save2File();
+        fighterManager.add(rogue);
+        fighterManager.save2File(pathToSample);
     }
 
     @Test
@@ -38,6 +42,8 @@ public class FighterTest {
 
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         ArrayList<Fighter> fighters = fighterManager.getList();
+
+        Assert.assertEquals(fighters.size(), 2);
 
         List<Attribute> attributes2Test = new ArrayList<>();
         attributes2Test.add(Attribute.Agility);
@@ -53,7 +59,7 @@ public class FighterTest {
                 fut = warrior;
                 break;
             case "Rogue":
-                fut = roque;
+                fut = rogue;
                 break;
             default:
                 throw new AssertionError("Weapon not expected");

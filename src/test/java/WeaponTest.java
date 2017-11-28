@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +26,12 @@ public class WeaponTest {
     }
 
     @Test
-    public void generationTest() {
+    public void generationTest() throws IOException {
 
         DataManager<Weapon> weaponManager = DataManager.getWeaponManager(pathToSample);
         weaponManager.add(sword);
         weaponManager.add(club);
-        weaponManager.save2File();
+        weaponManager.save2File(pathToSample);
     }
 
     @Test

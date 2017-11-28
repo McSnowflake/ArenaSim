@@ -1,28 +1,25 @@
 package logic;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import org.json.JSONObject;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 
 @XmlRootElement
 public class Weapon extends ArenaObject {
 
-    @XmlAttribute
-    private final Attribute baseAttribute;
-
     public Weapon() {
         this.type = "";
-        atributes = new HashMap<>();
-        baseAttribute = Attribute.Strength;
+        attributes = new HashMap<>();
     }
 
     public Weapon(String type, Attribute baseAttribute, int attack, int defence, int damage) {
         this.type = type;
-        atributes = new HashMap<>();
-        this.baseAttribute = baseAttribute;
-        atributes.put(Attribute.AttackBonus, attack);
-        atributes.put(Attribute.DefenceBonus, defence);
-        atributes.put(Attribute.DamageValue, damage);
+        attributes = new HashMap<>();
+        attributes.put(Attribute.BaseAttribute, baseAttribute);
+        attributes.put(Attribute.AttackBonus, attack);
+        attributes.put(Attribute.DefenceBonus, defence);
+        attributes.put(Attribute.DamageValue, damage);
     }
 
 /*    public Weapon(JSONObject json) throws JSONException, IllegalArgumentException {
@@ -43,5 +40,11 @@ public class Weapon extends ArenaObject {
 
     public String toString() {
         return type + ":" + baseAttribute.name();
+    }
+
+    @Override JSONObject toJSON() {
+        JSONObject jsonObject = super.toJSON();
+        jsonObject.put("baseAttribute", baseAttribute.name());
+        return jsonObject;
     }
 }

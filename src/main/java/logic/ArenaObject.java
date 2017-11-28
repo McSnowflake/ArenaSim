@@ -1,11 +1,12 @@
 package logic;
 
 import exceptions.AttributeNotPresentException;
+import org.json.JSONObject;
 
 import java.util.Map;
 import java.util.logging.*;
 
-public class ArenaObject {
+abstract class ArenaObject<T> {
 
     protected static Logger LOG = Logger.getAnonymousLogger();
 
@@ -22,23 +23,30 @@ public class ArenaObject {
     }
 
     protected String type;
-    protected Map<Attribute, Integer> atributes;
-    private Weapon weapon = null;
+    protected Map<Attribute, Object> attributes;
 
     public String getType() {
         return type;
     }
 
-    public int getAttribute(Attribute key) throws AttributeNotPresentException {
-        Integer value = atributes.get(key);
-        if (value == null)
-            throw new AttributeNotPresentException();
-        else
-            return atributes.get(key);
+    public T getAttribute(Attribute key, Class<T> type) throws AttributeNotPresentException {
+
+        if (attributes.containsKey(key))
+            return (T) attributes.get(key);
+        throw new AttributeNotPresentException();
+
     }
 
     public boolean fulfills(Attribute attribute, int value) {
-        return (atributes.containsKey(attribute) && (atributes.get(attribute) >= value));
+        return (attributes.containsKey(attribute) && (attributes.get(attribute) >= value));
     }
 
+    JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", getType());
+        for (Map.Entry<Attribute, Integer> attribute : attributes.entrySet()) {
+            jsonObject.put(attribute.getKey().name(), attribute.getValue());
+        }
+        return jsonObject;
+    }
 }
