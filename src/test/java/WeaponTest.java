@@ -2,8 +2,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import sample.Atribute;
+import sample.DataManager;
 import sample.Weapon;
-import sample.WeaponManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class WeaponTest {
         Weapon sword = new Weapon("Sword", Atribute.Agility);
         Weapon club = new Weapon("Club", Atribute.Strength);
 
-        WeaponManager weaponManager = new WeaponManager(pathToSample);
+        DataManager<Weapon> weaponManager = DataManager.getWeaponManager(pathToSample);
         weaponManager.add(sword);
         weaponManager.add(club);
         weaponManager.save2File();
@@ -34,7 +34,7 @@ public class WeaponTest {
     @Test
     public void loadingTest() {
 
-        WeaponManager weaponManager = new WeaponManager(pathToSample);
+        DataManager<Weapon> weaponManager = DataManager.getWeaponManager(pathToSample);
         ArrayList<Weapon> weapons = weaponManager.getList();
 
         for (Weapon weapon : weapons) {

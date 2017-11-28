@@ -2,5 +2,6 @@ package sample;
 
 public enum Atribute {
     Strength,
-    Agility
+    Agility,
+    Health
 }

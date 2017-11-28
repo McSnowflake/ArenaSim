@@ -2,8 +2,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import sample.Atribute;
+import sample.DataManager;
 import sample.Fighter;
-import sample.FighterManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class FighterTest {
         Fighter warrior = new Fighter("Warrior", 12, 8, 21);
         Fighter roque = new Fighter("Roque", 9, 12, 17);
 
-        FighterManager fighterManager = new FighterManager(pathToSample);
+        DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         fighterManager.add(warrior);
         fighterManager.add(roque);
         fighterManager.save2File();
@@ -34,7 +34,7 @@ public class FighterTest {
     @Test
     public void loadingTest() {
 
-        FighterManager fighterManager = new FighterManager(pathToSample);
+        DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         ArrayList<Fighter> fighters = fighterManager.getList();
 
         for (Fighter fighter : fighters) {
@@ -42,12 +42,12 @@ public class FighterTest {
             case "Warrior":
                 Assert.assertEquals(fighter.getAtribute(Atribute.Agility), 8);
                 Assert.assertEquals(fighter.getAtribute(Atribute.Strength), 12);
-                Assert.assertEquals(fighter.getHealth(), 21);
+                Assert.assertEquals(fighter.getAtribute(Atribute.Health), 21);
                 break;
             case "Roque":
                 Assert.assertEquals(fighter.getAtribute(Atribute.Agility), 12);
                 Assert.assertEquals(fighter.getAtribute(Atribute.Strength), 9);
-                Assert.assertEquals(fighter.getHealth(), 17);
+                Assert.assertEquals(fighter.getAtribute(Atribute.Health), 17);
                 break;
             default:
                 throw new AssertionError("Weapon not expected");
