@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 abstract class DataManager<T> {
 
@@ -37,10 +36,17 @@ abstract class DataManager<T> {
         }
         JSONArray elements = json.getJSONArray("list");
         for (int i = 0; i < elements.length(); i++) {
-            objectList.add((T)elements.get(i));
+            objectList.add((T) elements.get(i));
         }
         // docode to list
         return json;
     }
 
+    public void add(T object) {
+        objectList.add(object);
+    }
+
+    public void save2File() {
+        // TODO NICO
+    }
 }

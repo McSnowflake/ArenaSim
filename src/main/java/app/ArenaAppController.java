@@ -1,4 +1,4 @@
-package sample;
+package app;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
