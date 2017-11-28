@@ -2,6 +2,8 @@ package logic;
 
 import exceptions.AttributeNotPresentException;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import java.util.Map;
 import java.util.logging.*;
 
@@ -21,8 +23,10 @@ public class ArenaObject {
 
     }
 
+    @XmlAttribute
     protected String type;
-    protected Map<Attribute, Integer> atributes;
+    @XmlElement
+    protected Map<Attribute, Integer> attributes;
     private Weapon weapon = null;
 
     public String getType() {
@@ -30,15 +34,15 @@ public class ArenaObject {
     }
 
     public int getAttribute(Attribute key) throws AttributeNotPresentException {
-        Integer value = atributes.get(key);
+        Integer value = attributes.get(key);
         if (value == null)
             throw new AttributeNotPresentException();
         else
-            return atributes.get(key);
+            return attributes.get(key);
     }
 
     public boolean fulfills(Attribute attribute, int value) {
-        return (atributes.containsKey(attribute) && (atributes.get(attribute) >= value));
+        return (attributes.containsKey(attribute) && (attributes.get(attribute) >= value));
     }
 
 }
