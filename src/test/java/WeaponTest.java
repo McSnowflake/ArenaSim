@@ -1,7 +1,7 @@
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import sample.Atribute;
+import sample.Attribute;
 import sample.DataManager;
 import sample.Weapon;
 
@@ -22,8 +22,8 @@ public class WeaponTest {
     @Test
     public void generationTest() {
 
-        Weapon sword = new Weapon("Sword", Atribute.Agility);
-        Weapon club = new Weapon("Club", Atribute.Strength);
+        Weapon sword = new Weapon("Sword", Attribute.Agility);
+        Weapon club = new Weapon("Club", Attribute.Strength);
 
         DataManager<Weapon> weaponManager = DataManager.getWeaponManager(pathToSample);
         weaponManager.add(sword);
@@ -40,10 +40,10 @@ public class WeaponTest {
         for (Weapon weapon : weapons) {
             switch (weapon.getName()) {
             case "Sword":
-                Assert.assertEquals(weapon.getBaseAtribute(), Atribute.Agility);
+                Assert.assertEquals(weapon.getBaseAtribute(), Attribute.Agility);
                 break;
             case "Club":
-                Assert.assertEquals(weapon.getBaseAtribute(), Atribute.Strength);
+                Assert.assertEquals(weapon.getBaseAtribute(), Attribute.Strength);
                 break;
             default:
                 throw new AssertionError("Weapon not expected");
