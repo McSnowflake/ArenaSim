@@ -9,11 +9,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-abstract class DataManager<T> {
+public class DataManager<T> {
 
-    protected ArrayList<T> objectList;
+    private final static String WEAPON_FILE_PATH = "sample/weapons.json";
+    private final static String FIGHTER_FILE_PATH = "sample/fighter.json";
 
-    protected DataManager(String path2json) {
+    private ArrayList<T> objectList;
+
+    public static DataManager<Fighter> getFighterManager(String... file2path) {
+        if (file2path.length == 0)
+            return new DataManager<>(FIGHTER_FILE_PATH);
+        else
+            return new DataManager<>(file2path[0]);
+
+    }
+
+    public static DataManager<Weapon> getWeaponManager(String... file2path) {
+        if (file2path.length == 0)
+            return new DataManager<>(WEAPON_FILE_PATH);
+        else
+            return new DataManager<>(file2path[0]);
+
+    }
+
+    private DataManager(String path2json) {
         openJSON(path2json);
     }
 
@@ -22,7 +41,7 @@ abstract class DataManager<T> {
     }
 
     // TODO NICO MARSHALL
-    protected JSONObject openJSON(String filePath) {
+    private JSONObject openJSON(String filePath) {
         JSONObject json;
         try {
             InputStream is = new FileInputStream(filePath);
