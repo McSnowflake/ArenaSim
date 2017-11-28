@@ -1,12 +1,35 @@
-{
-  "list": [
-    {
-      "Name": "Sword",
-      "Base": "Agility"
-    },
-    {
-      "Name": "Club",
-      "Base": "Strength"
-    }
-  ]
-}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<weapons>
+    <weapon baseAttribute="Agility" type="Sword">
+        <attributes>
+            <entry>
+                <key>AttackBonus</key>
+                <value>2</value>
+            </entry>
+            <entry>
+                <key>DamageValue</key>
+                <value>4</value>
+            </entry>
+            <entry>
+                <key>DefenceBonus</key>
+                <value>3</value>
+            </entry>
+        </attributes>
+    </weapon>
+    <weapon baseAttribute="Strength" type="Club">
+        <attributes>
+            <entry>
+                <key>AttackBonus</key>
+                <value>4</value>
+            </entry>
+            <entry>
+                <key>DamageValue</key>
+                <value>2</value>
+            </entry>
+            <entry>
+                <key>DefenceBonus</key>
+                <value>3</value>
+            </entry>
+        </attributes>
+    </weapon>
+</weapons>

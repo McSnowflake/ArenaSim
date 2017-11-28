@@ -23,7 +23,7 @@ public class WeaponList extends DataList{
     }
 
 
-    public List<Weapon> getWeapons(){
+    public ArrayList<Weapon> getWeapons(){
         return weapons;
     }
 

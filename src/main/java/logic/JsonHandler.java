@@ -4,36 +4,58 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-public class JsonHandler {
+public class JsonHandler<T> {
 
     // Export
-    public static void marshal(ArrayList<Weapon> weapons, File selectedFile)
-            throws IOException, JAXBException {
+    public void marshal(ArrayList<T> weapons, File selectedFile) throws IOException, JAXBException {
         JAXBContext context;
         BufferedWriter writer;
         writer = new BufferedWriter(new FileWriter(selectedFile));
-        context = JAXBContext.newInstance(WeaponList.class);
+        context = JAXBContext.newInstance(ElementList.class);
         Marshaller m = context.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        m.marshal(new WeaponList(weapons), writer);
+        m.marshal(new ElementList(T), writer);
         writer.close();
     }
 
     // Import
-    public static WeaponList unmarshal(File importFile) throws JAXBException {
-        WeaponList weapons;
+    public ArrayList<T> unmarshal(File importFile) throws JAXBException {
+        ElementList elements;
 
-        JAXBContext context = JAXBContext.newInstance(WeaponList.class);
+        JAXBContext context = JAXBContext.newInstance(ElementList.class);
         Unmarshaller um = context.createUnmarshaller();
-        weapons = (WeaponList) um.unmarshal(importFile);
+        elements = (ElementList) um.unmarshal(importFile);
+        if (elements.getElements().size() == 0)
+            throw new RuntimeException("no file found");
+        return elements.getElements();
+    }
 
-        return weapons;
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlRootElement(name = "elements") class ElementList<T> {
+
+        @XmlElement(name = "element", type = )
+        private ArrayList<T> elements = new ArrayList<>();
+
+        public ElementList() {
+        }
+
+        public ElementList(ArrayList<T> elements) {
+            this.elements = elements;
+        }
+
+        public ArrayList<T> getElements() {
+            return elements;
+        }
+
     }
 }

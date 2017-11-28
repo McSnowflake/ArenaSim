@@ -6,13 +6,15 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FighterTest {
 
-    private static String pathToSample = "sample/fighter_test.json";
+    private static String pathToSample = "src/test/resources/fighter_test.json";
     private Fighter warrior = new Fighter("Warrior", 12, 8, 21, 3);
     private Fighter roque = new Fighter("Rogue", 9, 12, 17, 2);
 
@@ -25,16 +27,16 @@ public class FighterTest {
     }
 
     @Test
-    public void generationTest() {
+    public void generationTest() throws JAXBException, IOException {
 
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         fighterManager.add(warrior);
         fighterManager.add(roque);
-        fighterManager.save2File();
+        fighterManager.save2File(pathToSample);
     }
 
     @Test
-    public void loadingTest() throws AttributeNotPresentException {
+    public void loadingTest() throws AttributeNotPresentException, JAXBException {
 
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         ArrayList<Fighter> fighters = fighterManager.getList();
