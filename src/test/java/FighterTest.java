@@ -38,7 +38,7 @@ public class FighterTest {
         ArrayList<Fighter> fighters = fighterManager.getList();
 
         for (Fighter fighter : fighters) {
-            switch (fighter.getName()) {
+            switch (fighter.getType()) {
             case "Warrior":
                 Assert.assertEquals(fighter.getAttribute(Attribute.Agility), 8);
                 Assert.assertEquals(fighter.getAttribute(Attribute.Strength), 12);

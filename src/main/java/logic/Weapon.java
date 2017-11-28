@@ -14,6 +14,9 @@ public class Weapon {
 
     @XmlAttribute
     private final Attribute baseAttribute;
+    private int attackValue = 2;
+    private int defenceBonus = 2;
+    private int damageValue = 3;
 
     public Weapon(){
         name = "";
@@ -43,6 +46,18 @@ public class Weapon {
         json.append(Keys.Name.name(), name);
         json.append(Keys.Base.name(), baseAttribute.name());
         return json;
+    }
+
+    public int getAttackValue() {
+        return attackValue;
+    }
+
+    public int getDefenceBonus() {
+        return defenceBonus;
+    }
+
+    public int getDamageValue() {
+        return damageValue;
     }
 
     enum Keys {
