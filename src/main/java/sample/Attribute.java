@@ -1,6 +1,6 @@
 package sample;
 
-public enum Atribute {
+public enum Attribute {
     Strength,
     Agility
 }
