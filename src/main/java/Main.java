@@ -39,8 +39,8 @@ public class Main extends Application {
 
         //launch(args);
 
-        List<Weapon> weaponList = Arrays.asList(new Weapon("Axt", Attribute.Strength),
-                new Weapon("Bow", Attribute.Agility));
+        List<Weapon> weaponList = Arrays.asList(new Weapon("Axt", Attribute.Strength,5,4,3),
+                new Weapon("Bow", Attribute.Agility,4,3,2));
 
         // Create the Marshaller Object using the JaxB Context
         Map<String, Object> properties = new HashMap<>();

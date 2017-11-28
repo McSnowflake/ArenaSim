@@ -1,7 +1,12 @@
 package logic;
 
 public enum Attribute {
+
     Strength,
     Agility,
-    Health
+    Health,
+    AttackBonus,
+    DefenceBonus,
+    DamageValue,
+    Armor
 }

@@ -1,3 +1,4 @@
+import exceptions.AttributeNotPresentException;
 import exceptions.NoWeaponException;
 import logic.Attribute;
 import logic.Fighter;
@@ -6,14 +7,14 @@ import org.testng.annotations.Test;
 
 public class FightTest {
 
-    private Fighter warrior = new Fighter("Warrior", 12, 8, 21);
-    private Fighter rogue = new Fighter("Roque", 9, 12, 17);
+    private Fighter warrior = new Fighter("Warrior", 12, 8, 21,3);
+    private Fighter rogue = new Fighter("Roque", 9, 12, 17,2);
 
-    private Weapon sword = new Weapon("Sword", Attribute.Agility);
-    private Weapon club = new Weapon("Club", Attribute.Strength);
+    private Weapon sword = new Weapon("Sword", Attribute.Agility,2,3,4);
+    private Weapon club = new Weapon("Club", Attribute.Strength,4,3,2);
 
     @Test
-    public void deathMatch() throws NoWeaponException, InterruptedException {
+    public void deathMatch() throws NoWeaponException, InterruptedException, AttributeNotPresentException {
 
         warrior.setWeapon(club);
         rogue.setWeapon(sword);

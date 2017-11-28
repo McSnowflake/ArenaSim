@@ -1,76 +1,47 @@
 package logic;
 
+import exceptions.AttributeNotPresentException;
 import exceptions.NoWeaponException;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.*;
 
-public class Fighter {
-
-    private static Logger LOG = Logger.getAnonymousLogger();
-
-    static {
-        LOG.setUseParentHandlers(false);
-        Handler conHdlr = new ConsoleHandler();
-        conHdlr.setFormatter(new Formatter() {
-            public String format(LogRecord record) {
-                return record.getMessage() + "\n";
-            }
-        });
-        LOG.addHandler(conHdlr);
-
-    }
-
-    private final String type;
-    private final Map<Attribute, Integer> atributes;
+public class Fighter extends ArenaObject {
 
     private Weapon weapon = null;
-    private int armor;
 
-    public Fighter(String type, int strength, int agility, int health) {
+    public Fighter(String type, int strength, int agility, int health, int armor) {
+
         this.type = type;
         atributes = new HashMap<>();
         atributes.put(Attribute.Strength, strength);
         atributes.put(Attribute.Agility, agility);
         atributes.put(Attribute.Health, health);
+        atributes.put(Attribute.Armor, armor);
     }
 
     public boolean setWeapon(Weapon weapon) {
-        if (fulfills(weapon.getBaseAtribute(), 10)) {
+        if (fulfills(weapon.getBaseAttribute(), 10)) {
             this.weapon = weapon;
-            LOG.info(type + " is now armed with a " + weapon);
+            LOG.info(type + " is now armed with a " + weapon.getType());
             return true;
         }
-        LOG.warning(type + " could not hold a " + weapon);
+        LOG.warning(type + " could not hold a " + weapon.getType() + " : " + weapon.getBaseAttribute() + " to low");
         return false;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public int getAttribute(Attribute key) {
-        return atributes.get(key);
-    }
-
-    public boolean fulfills(Attribute attribute, int value) {
-        return (atributes.containsKey(attribute) && (atributes.get(attribute) >= value));
-    }
-
-    public void attack(Fighter target) throws NoWeaponException {
+    public void attack(Fighter target) throws NoWeaponException, AttributeNotPresentException {
         int attackValue = this.getAttackValue();
         LOG.info(this.type + " attacks " + target.type);
         if (!target.defend(attackValue)) {
-            int damageValue = weapon.getDamageValue();
+            int damageValue = weapon.getAttribute(Attribute.DamageValue);
             target.receive(damageValue);
         } else {
             LOG.info(target.type + " parried");
         }
     }
 
-    private void receive(int hitValue) {
-        int damage = hitValue - armor;
+    private void receive(int hitValue) throws AttributeNotPresentException {
+        int damage = hitValue - getAttribute(Attribute.Armor);
         if (damage > 0) {
             int currentHealth = atributes.get(Attribute.Health);
             atributes.put(Attribute.Health, currentHealth - damage);
@@ -81,18 +52,18 @@ public class Fighter {
         }
     }
 
-    private boolean defend(int attackvalue) throws NoWeaponException {
+    private boolean defend(int attackvalue) throws NoWeaponException, AttributeNotPresentException {
         try {
-            int defensValue = getAttribute(Attribute.Agility) + weapon.getDefenceBonus();
+            int defensValue = getAttribute(Attribute.Agility) + weapon.getAttribute(Attribute.DefenceBonus);
             return defensValue >= attackvalue;
         } catch (NullPointerException npe) {
             throw new NoWeaponException();
         }
     }
 
-    private int getAttackValue() throws NoWeaponException {
+    private int getAttackValue() throws NoWeaponException, AttributeNotPresentException {
         try {
-            return getAttribute(weapon.getBaseAtribute()) + weapon.getAttackValue();
+            return getAttribute(weapon.getBaseAttribute()) + weapon.getAttribute(Attribute.AttackBonus);
         } catch (NullPointerException npe) {
             throw new NoWeaponException();
         }

@@ -1,3 +1,4 @@
+import exceptions.AttributeNotPresentException;
 import logic.Attribute;
 import logic.DataManager;
 import logic.Fighter;
@@ -7,9 +8,13 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FighterTest {
+
     private static String pathToSample = "sample/fighter_test.json";
+    private Fighter warrior = new Fighter("Warrior", 12, 8, 21, 3);
+    private Fighter roque = new Fighter("Rogue", 9, 12, 17, 2);
 
     @BeforeTest
     public void cleanUp() {
@@ -22,9 +27,6 @@ public class FighterTest {
     @Test
     public void generationTest() {
 
-        Fighter warrior = new Fighter("Warrior", 12, 8, 21);
-        Fighter roque = new Fighter("Rogue", 9, 12, 17);
-
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         fighterManager.add(warrior);
         fighterManager.add(roque);
@@ -32,27 +34,34 @@ public class FighterTest {
     }
 
     @Test
-    public void loadingTest() {
+    public void loadingTest() throws AttributeNotPresentException {
 
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         ArrayList<Fighter> fighters = fighterManager.getList();
 
+        List<Attribute> attributes2Test = new ArrayList<>();
+        attributes2Test.add(Attribute.Agility);
+        attributes2Test.add(Attribute.Strength);
+        attributes2Test.add(Attribute.Health);
+        attributes2Test.add(Attribute.Armor);
+
         for (Fighter fighter : fighters) {
+
+            Fighter fut;
             switch (fighter.getType()) {
             case "Warrior":
-                Assert.assertEquals(fighter.getAttribute(Attribute.Agility), 8);
-                Assert.assertEquals(fighter.getAttribute(Attribute.Strength), 12);
-                Assert.assertEquals(fighter.getAttribute(Attribute.Health), 21);
+                fut = warrior;
                 break;
             case "Rogue":
-                Assert.assertEquals(fighter.getAttribute(Attribute.Agility), 12);
-                Assert.assertEquals(fighter.getAttribute(Attribute.Strength), 9);
-                Assert.assertEquals(fighter.getAttribute(Attribute.Health), 17);
+                fut = roque;
                 break;
             default:
                 throw new AssertionError("Weapon not expected");
             }
-        }
+            for (Attribute attribute : attributes2Test) {
+                Assert.assertEquals(fighter.getAttribute(attribute), fut.getAttribute(attribute));
+            }
 
+        }
     }
 }
