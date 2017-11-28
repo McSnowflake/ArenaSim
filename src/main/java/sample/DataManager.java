@@ -5,25 +5,25 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class DataManager<T> {
 
-    private static JSONObject json;
+    protected ArrayList<T> objectList;
 
-
-    private DataManager() {
+    protected DataManager(String path2json) {
+        openJSON(path2json);
     }
 
-    public static List<T> getList() {
-       JSONArray opjects = json.getJSONArray("array");
-
+    public List<T> getList() {
+        return objectList;
     }
 
-    protected static JSONObject openJSON(String filePath) {
+    // TODO NICO MARSHALL
+    protected JSONObject openJSON(String filePath) {
         JSONObject json;
         try {
             InputStream is = new FileInputStream(filePath);
@@ -35,7 +35,11 @@ abstract class DataManager<T> {
             System.out.println("Creating new weapon json.");
             json = new JSONObject();
         }
-        DataManager.json = json;
+        JSONArray elements = json.getJSONArray("list");
+        for (int i = 0; i < elements.length(); i++) {
+            objectList.add((T)elements.get(i));
+        }
+        // docode to list
     }
 
 }

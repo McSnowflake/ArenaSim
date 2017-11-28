@@ -26,7 +26,7 @@ public class Weapon {
         return baseAtribute;
     }
 
-    public JSONObject getJSONString() {
+    public JSONObject getJSON() {
         JSONObject json = new JSONObject();
         json.append(Keys.Name.name(), name);
         json.append(Keys.Base.name(), baseAtribute.name());
