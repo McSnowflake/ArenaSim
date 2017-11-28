@@ -20,7 +20,7 @@ public class WeaponTest {
     }
 
     @Test
-    public void weaponGenerationTest() {
+    public void generationTest() {
 
         Weapon sword = new Weapon("Sword", Atribute.Agility);
         Weapon club = new Weapon("Club", Atribute.Strength);
@@ -32,9 +32,8 @@ public class WeaponTest {
     }
 
     @Test
-    public void weaponLoadingTest() {
+    public void loadingTest() {
 
-        String pathToSample = "sample/weapon_test.json";
         WeaponManager weaponManager = new WeaponManager(pathToSample);
         ArrayList<Weapon> weapons = weaponManager.getList();
 
