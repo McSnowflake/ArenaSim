@@ -1,12 +1,12 @@
 package logic;
 
 import exceptions.AttributeNotPresentException;
-import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.*;
 
-abstract class ArenaObject<T> {
+public abstract class ArenaObject<T extends ArenaObject> {
 
     protected static Logger LOG = Logger.getAnonymousLogger();
 
@@ -23,17 +23,29 @@ abstract class ArenaObject<T> {
     }
 
     protected String type;
-    protected Map<Attribute, Object> attributes;
+    protected Map<Attribute, Integer> attributes = new HashMap<>();
 
     public String getType() {
         return type;
     }
 
-    public T getAttribute(Attribute key, Class<T> type) throws AttributeNotPresentException {
+    public <T extends ArenaObject> T setAttribute(Attribute attribute, Integer value) {
+        attributes.put(attribute, value);
+        return (T) this;
+    }
+
+    public Integer getAttribute(Attribute key) throws AttributeNotPresentException {
 
         if (attributes.containsKey(key))
-            return (T) attributes.get(key);
+            return attributes.get(key);
         throw new AttributeNotPresentException();
+
+    }
+
+    public Map<Attribute, Integer> getAttributes() {
+        Map<Attribute, Integer> copy = new HashMap<>();
+        copy.putAll(attributes);
+        return copy;
 
     }
 
@@ -41,12 +53,4 @@ abstract class ArenaObject<T> {
         return (attributes.containsKey(attribute) && (attributes.get(attribute) >= value));
     }
 
-    JSONObject toJSON() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", getType());
-        for (Map.Entry<Attribute, Integer> attribute : attributes.entrySet()) {
-            jsonObject.put(attribute.getKey().name(), attribute.getValue());
-        }
-        return jsonObject;
-    }
 }

@@ -1,50 +1,38 @@
 package logic;
 
-import org.json.JSONObject;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
+import java.util.Map;
 
 @XmlRootElement
 public class Weapon extends ArenaObject {
 
-    public Weapon() {
-        this.type = "";
-        attributes = new HashMap<>();
-    }
+    private Attribute baseAttribute;
 
     public Weapon(String type, Attribute baseAttribute, int attack, int defence, int damage) {
         this.type = type;
-        attributes = new HashMap<>();
-        attributes.put(Attribute.BaseAttribute, baseAttribute);
-        attributes.put(Attribute.AttackBonus, attack);
-        attributes.put(Attribute.DefenceBonus, defence);
-        attributes.put(Attribute.DamageValue, damage);
+        this.baseAttribute = baseAttribute;
+        this.attributes.put(Attribute.AttackBonus, attack);
+        this.attributes.put(Attribute.DefenceBonus, defence);
+        this.attributes.put(Attribute.DamageValue, damage);
     }
 
-/*    public Weapon(JSONObject json) throws JSONException, IllegalArgumentException {
-        this.name = json.getString(Keys.Name.name());
-        this.baseAttribute = Attribute.valueOf(json.getString(Keys.Name.name()));
-    }*/
+    public Weapon(String type, Attribute baseAttribute, Map<Attribute, Integer> attributes) {
+        this.type = type;
+        this.baseAttribute = baseAttribute;
+        this.attributes = attributes;
+    }
+
+    public Weapon(String type, Attribute baseAttribute) {
+        this.type = type;
+        this.baseAttribute = baseAttribute;
+    }
 
     public Attribute getBaseAttribute() {
         return baseAttribute;
     }
 
-/*    public JSONObject getJSON() {
-        JSONObject json = new JSONObject();
-        json.append(Keys.Name.name(), name);
-        json.append(Keys.Base.name(), baseAttribute.name());
-        return json;
-    }*/
-
     public String toString() {
         return type + ":" + baseAttribute.name();
-    }
-
-    @Override JSONObject toJSON() {
-        JSONObject jsonObject = super.toJSON();
-        jsonObject.put("baseAttribute", baseAttribute.name());
-        return jsonObject;
     }
 }

@@ -1,7 +1,7 @@
 import exceptions.AttributeNotPresentException;
 import logic.Attribute;
-import logic.DataManager;
 import logic.Fighter;
+import data.FighterManager;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -28,7 +28,7 @@ public class FighterTest {
     @Test
     public void generationTest() throws IOException {
 
-        DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
+        FighterManager fighterManager = new FighterManager(pathToSample);
 
         Assert.assertEquals(fighterManager.getList().size(), 0);
 
@@ -40,7 +40,7 @@ public class FighterTest {
     @Test
     public void loadingTest() throws AttributeNotPresentException {
 
-        DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
+        FighterManager fighterManager = new FighterManager(pathToSample);
         ArrayList<Fighter> fighters = fighterManager.getList();
 
         Assert.assertEquals(fighters.size(), 2);

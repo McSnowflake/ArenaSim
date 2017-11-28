@@ -4,20 +4,25 @@ import exceptions.AttributeNotPresentException;
 import exceptions.NoWeaponException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Fighter extends ArenaObject {
 
     private Weapon weapon = null;
 
-    public Fighter(String type, int strength, int agility, int health, int armor) {
+    public Fighter(String type, Integer strength, Integer agility, Integer health, Integer armor) {
 
         this.type = type;
-        attributes = new HashMap<>();
         attributes.put(Attribute.Strength, strength);
         attributes.put(Attribute.Agility, agility);
         attributes.put(Attribute.Health, health);
         attributes.put(Attribute.Armor, armor);
+    }
+
+    public Fighter(String type, Map<Attribute, Integer> attributes) {
+
+        this.type = type;
+        this.attributes = attributes;
     }
 
     public boolean setWeapon(Weapon weapon) {
@@ -44,7 +49,7 @@ public class Fighter extends ArenaObject {
     private void receive(int hitValue) throws AttributeNotPresentException {
         int damage = hitValue - getAttribute(Attribute.Armor);
         if (damage > 0) {
-            int currentHealth = attributes.get(Attribute.Health);
+            int currentHealth = getAttribute(Attribute.Health);
             attributes.put(Attribute.Health, currentHealth - damage);
             LOG.info(this.type + " received " + damage + " damage and has now " + this.getAttribute(Attribute.Health));
         } else {
@@ -71,7 +76,7 @@ public class Fighter extends ArenaObject {
 
     }
 
-     public static Weapon load(JSONObject jsonObject) {
+    public Weapon load(JSONObject jsonObject) {
         return null;
     }
 }

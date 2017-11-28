@@ -1,6 +1,6 @@
+import data.WeaponManager;
 import exceptions.AttributeNotPresentException;
 import logic.Attribute;
-import logic.DataManager;
 import logic.Weapon;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
@@ -13,9 +13,9 @@ import java.util.List;
 
 public class WeaponTest {
 
-    private static String pathToSample = "sample/weapon_test.json";
-    Weapon sword = new Weapon("Sword", Attribute.Agility, 2, 3, 4);
-    Weapon club = new Weapon("Club", Attribute.Strength, 4, 3, 2);
+    private static String pathToSample = "src/test/resources/weapon_test.json";
+    Weapon sword = new Weapon("Sword", Attribute.Agility, 3, 4, 2);
+    Weapon club = new Weapon("Club", Attribute.Strength, 3, 2, 4);
 
     @BeforeTest
     public void cleanUp() {
@@ -28,7 +28,7 @@ public class WeaponTest {
     @Test
     public void generationTest() throws IOException {
 
-        DataManager<Weapon> weaponManager = DataManager.getWeaponManager(pathToSample);
+        WeaponManager weaponManager = new WeaponManager(pathToSample);
         weaponManager.add(sword);
         weaponManager.add(club);
         weaponManager.save2File(pathToSample);
@@ -37,7 +37,7 @@ public class WeaponTest {
     @Test
     public void loadingTest() throws AttributeNotPresentException {
 
-        DataManager<Weapon> weaponManager = DataManager.getWeaponManager(pathToSample);
+        WeaponManager weaponManager = new WeaponManager(pathToSample);
         ArrayList<Weapon> weapons = weaponManager.getList();
 
         List<Attribute> attributes2Test = new ArrayList<>();
