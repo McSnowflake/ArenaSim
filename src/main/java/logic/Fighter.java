@@ -1,4 +1,4 @@
-package sample;
+package logic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,20 +6,20 @@ import java.util.Map;
 public class Fighter {
 
     private final String name;
-    private final Map<Atribute, Integer> atributes;
+    private final Map<Attribute, Integer> atributes;
 
     private Weapon weapon;
 
     public Fighter(String name, int strength, int agility, int health) {
         this.name = name;
         atributes = new HashMap<>();
-        atributes.put(Atribute.Strength, strength);
-        atributes.put(Atribute.Agility, agility);
-        atributes.put(Atribute.Health, health);
+        atributes.put(Attribute.Strength, strength);
+        atributes.put(Attribute.Agility, agility);
+        atributes.put(Attribute.Health, health);
     }
 
     public boolean setWeapon(Weapon weapon) {
-        if (fullfilles(weapon.getBaseAtribute(), 10)) {
+        if (fulfills(weapon.getBaseAtribute(), 10)) {
             this.weapon = weapon;
             return true;
         }
@@ -30,11 +30,11 @@ public class Fighter {
         return name;
     }
 
-    public int getAtribute(Atribute key) {
+    public int getAttribute(Attribute key) {
         return atributes.get(key);
     }
 
-    public boolean fullfilles(Atribute atribute, int value) {
-        return (atributes.containsKey(atribute) && (atributes.get(atribute) >= value));
+    public boolean fulfills(Attribute attribute, int value) {
+        return (atributes.containsKey(attribute) && (atributes.get(attribute) >= value));
     }
 }

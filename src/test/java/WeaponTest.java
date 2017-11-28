@@ -1,9 +1,9 @@
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import sample.Attribute;
-import sample.DataManager;
-import sample.Weapon;
+import logic.Attribute;
+import logic.DataManager;
+import logic.Weapon;
 
 import java.io.File;
 import java.util.ArrayList;

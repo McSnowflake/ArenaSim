@@ -1,4 +1,4 @@
-package sample;
+package logic;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;

@@ -1,9 +1,9 @@
+import logic.Attribute;
+import logic.DataManager;
+import logic.Fighter;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import sample.Atribute;
-import sample.DataManager;
-import sample.Fighter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class FighterTest {
     public void generationTest() {
 
         Fighter warrior = new Fighter("Warrior", 12, 8, 21);
-        Fighter roque = new Fighter("Roque", 9, 12, 17);
+        Fighter roque = new Fighter("Rogue", 9, 12, 17);
 
         DataManager<Fighter> fighterManager = DataManager.getFighterManager(pathToSample);
         fighterManager.add(warrior);
@@ -40,14 +40,14 @@ public class FighterTest {
         for (Fighter fighter : fighters) {
             switch (fighter.getName()) {
             case "Warrior":
-                Assert.assertEquals(fighter.getAtribute(Atribute.Agility), 8);
-                Assert.assertEquals(fighter.getAtribute(Atribute.Strength), 12);
-                Assert.assertEquals(fighter.getAtribute(Atribute.Health), 21);
+                Assert.assertEquals(fighter.getAttribute(Attribute.Agility), 8);
+                Assert.assertEquals(fighter.getAttribute(Attribute.Strength), 12);
+                Assert.assertEquals(fighter.getAttribute(Attribute.Health), 21);
                 break;
-            case "Roque":
-                Assert.assertEquals(fighter.getAtribute(Atribute.Agility), 12);
-                Assert.assertEquals(fighter.getAtribute(Atribute.Strength), 9);
-                Assert.assertEquals(fighter.getAtribute(Atribute.Health), 17);
+            case "Rogue":
+                Assert.assertEquals(fighter.getAttribute(Attribute.Agility), 12);
+                Assert.assertEquals(fighter.getAttribute(Attribute.Strength), 9);
+                Assert.assertEquals(fighter.getAttribute(Attribute.Health), 17);
                 break;
             default:
                 throw new AssertionError("Weapon not expected");

@@ -1,17 +1,10 @@
+import logic.Attribute;
+import logic.Fighter;
+import logic.Weapon;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import sample.Atribute;
-import sample.Fighter;
-import sample.Weapon;
 
 public class EquipmentTest {
-    Fighter warrior = new Fighter("Warrior", 12, 8, 21);
-    Fighter roque = new Fighter("Roque", 9, 12, 17);
-
-    @BeforeTest
-    public void create() {
-    }
 
     @Test
     public void requirementsTest() {
@@ -19,8 +12,8 @@ public class EquipmentTest {
         Fighter warrior = new Fighter("Warrior", 12, 8, 21);
         Fighter roque = new Fighter("Roque", 9, 12, 17);
 
-        Weapon sword = new Weapon("Sword", Atribute.Agility);
-        Weapon club = new Weapon("Club", Atribute.Strength);
+        Weapon sword = new Weapon("Sword", Attribute.Agility);
+        Weapon club = new Weapon("Club", Attribute.Strength);
 
         Assert.assertFalse(warrior.setWeapon(sword));
         Assert.assertTrue(warrior.setWeapon(club));
