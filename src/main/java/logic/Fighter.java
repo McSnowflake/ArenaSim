@@ -63,7 +63,7 @@ public class Fighter extends ArenaObject {
 
     private boolean defend(int attackValue) throws NoWeaponException, AttributeNotPresentException {
         try {
-            int defensValue = getAttribute(Attribute.Agility) + weapon.getAttribute(Attribute.DefenceBonus) + Dice.HIGH.roll();
+            int defensValue = getAttribute(Attribute.Agility) + weapon.getDefenceValue(attributes);
             return defensValue >= attackValue;
         } catch (NullPointerException npe) {
             throw new NoWeaponException();

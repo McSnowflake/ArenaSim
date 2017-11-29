@@ -46,4 +46,8 @@ public class Weapon extends ArenaObject {
     public boolean isUsable(Map<Attribute,Integer> attributes) {
         return false;
     }
+
+    public Integer getDefenceValue(Map attributes) {
+        return null;
+    }
 }
