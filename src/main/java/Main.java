@@ -7,25 +7,13 @@ import logic.Attribute;
 import logic.JsonHandler;
 import logic.Weapon;
 import logic.WeaponList;
-import org.eclipse.persistence.jaxb.JAXBContextFactory;
-import org.eclipse.persistence.jaxb.JAXBContextProperties;
-import org.eclipse.persistence.jaxb.MarshallerProperties;
-import org.eclipse.persistence.jaxb.UnmarshallerProperties;
-import org.eclipse.persistence.jaxb.xmlmodel.ObjectFactory;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Main extends Application {
 
@@ -49,12 +37,12 @@ public class Main extends Application {
         weaponList2.addAll(weaponList);
 
 
-        JsonHandler.marshal(weaponList2, new File("tmp.txt"));
+        //JsonHandler.marshal(weaponList2, new File("tmp.txt"));
 
 
-        WeaponList weapons = JsonHandler.unmarshal(new File("tmp.txt"));
+        //WeaponList weapons = JsonHandler.unmarshal(new File("tmp.txt"));
 
-        weapons.getWeapons();
+        //weapons.getWeapons();
 
 
     }
