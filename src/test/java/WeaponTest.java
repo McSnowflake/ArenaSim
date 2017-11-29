@@ -1,6 +1,6 @@
 import data.WeaponManager;
+import enums.Attribute;
 import exceptions.AttributeNotPresentException;
-import logic.Attribute;
 import logic.Weapon;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeaponTest extends AbstractTest  {
+public class WeaponTest extends AbstractTest {
 
     private static String pathToSample = "src/test/resources/weapon_test.json";
-    Weapon sword = new Weapon("Sword", Attribute.Agility, 3, 4, 2);
-    Weapon club = new Weapon("Club", Attribute.Strength, 3, 2, 4);
+    Weapon sword = new Weapon("Sword", 3, 4, 2);
+    Weapon club = new Weapon("Club", 3, 2, 4);
 
     @BeforeTest
     public void cleanUp() {
@@ -41,9 +41,9 @@ public class WeaponTest extends AbstractTest  {
         ArrayList<Weapon> weapons = weaponManager.getList();
 
         List<Attribute> attributes2Test = new ArrayList<>();
-        attributes2Test.add(Attribute.AttackBonus);
-        attributes2Test.add(Attribute.DefenceBonus);
-        attributes2Test.add(Attribute.DamageValue);
+        attributes2Test.add(Attribute.Attack);
+        attributes2Test.add(Attribute.Defence);
+        attributes2Test.add(Attribute.Damage);
 
         for (Weapon weapon : weapons) {
             Weapon wut;

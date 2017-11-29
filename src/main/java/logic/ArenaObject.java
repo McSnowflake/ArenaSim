@@ -1,12 +1,13 @@
 package logic;
 
-import exceptions.AttributeNotPresentException;
+import enums.Attribute;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.*;
+import java.util.stream.Stream;
 
-public abstract class ArenaObject<T extends ArenaObject> {
+public abstract class ArenaObject {
 
     protected static Logger LOG = Logger.getAnonymousLogger();
 
@@ -24,34 +25,41 @@ public abstract class ArenaObject<T extends ArenaObject> {
     }
 
     protected String type;
-    protected Map<Attribute, Integer> attributes = new HashMap<>();
+    private List<Attribute> attributes = new ArrayList<>();
 
     public String getType() {
         return type;
     }
 
-    public <T extends ArenaObject> T setAttribute(Attribute attribute, Integer value) {
-        attributes.put(attribute, value);
-        return (T) this;
+    public Integer getAttribute(Attribute key) {
+        int index = attributes.indexOf(key);
+        if (index >= 0)
+            return attributes.get(index).getValue();
+        return 0;
     }
 
-    public Integer getAttribute(Attribute key) throws AttributeNotPresentException {
-
-        if (attributes.containsKey(key))
-            return attributes.get(key);
-        throw new AttributeNotPresentException();
-
+    public void setAttribute(Attribute attribute) {
+        int index = attributes.indexOf(attribute);
+        if (index >= 0)
+            attributes.set(index, attribute);
+        else
+            attributes.add(attribute);
     }
 
-    public Map<Attribute, Integer> getAttributes() {
-        Map<Attribute, Integer> copy = new HashMap<>();
-        copy.putAll(attributes);
-        return copy;
-
+    public Stream<Attribute> getAttributes() {
+        return attributes.stream();
     }
 
-    public boolean fulfills(Attribute attribute, int value) {
-        return (attributes.containsKey(attribute) && (attributes.get(attribute) >= value));
+    public boolean fulfills(Stream<Attribute> requirements) {
+
+        return requirements.allMatch(requirement -> getAttribute(requirement) >= requirement.getValue());
     }
 
+    void setAttributes(List<Attribute> attributes) {
+        attributes.forEach(this::setAttribute);
+    }
+
+    public void addAttribute(Attribute attribute) {
+        setAttribute(attribute.setValue(attribute.getValue() + getAttribute(attribute)));
+    }
 }

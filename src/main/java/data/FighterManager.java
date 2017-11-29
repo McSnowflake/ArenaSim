@@ -1,9 +1,10 @@
 package data;
 
-import logic.Attribute;
+import enums.Attribute;
 import logic.Fighter;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 public class FighterManager extends DataManager<Fighter> {
@@ -30,7 +31,7 @@ public class FighterManager extends DataManager<Fighter> {
 
     @Override protected Fighter decodeJSON(JSONObject json) {
         String type = json.getString("type");
-        Map<Attribute, Integer> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
+        List<Attribute> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
         return new Fighter(type, attributes);
 
     }

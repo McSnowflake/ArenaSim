@@ -1,53 +1,52 @@
 package logic;
 
+import enums.Attribute;
+
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @XmlRootElement
 public class Weapon extends ArenaObject {
 
-    private Attribute baseAttribute;
+    private List<Attribute> requirements = new ArrayList<>();
+    // TODO
+    private List<Rule> usageRules = new ArrayList<>();
 
-    public Weapon(String type, Attribute baseAttribute, int attack, int defence, int damage) {
+    public Weapon(String type, int attack, int defence, int damage) {
         this.type = type;
-        this.baseAttribute = baseAttribute;
-        this.attributes.put(Attribute.AttackBonus, attack);
-        this.attributes.put(Attribute.DefenceBonus, defence);
-        this.attributes.put(Attribute.DamageValue, damage);
+        setAttribute(Attribute.Attack.setValue(attack));
+        setAttribute(Attribute.Defence.setValue(defence));
+        setAttribute(Attribute.Damage.setValue(damage));
+
     }
 
-    public Weapon(String type, Attribute baseAttribute, Map<Attribute, Integer> attributes) {
+    public Weapon(String type, List<Attribute> requirements, List<Attribute> attributes) {
         this.type = type;
-        this.baseAttribute = baseAttribute;
-        this.attributes = attributes;
-    }
-
-    public Weapon(String type, Attribute baseAttribute) {
-        this.type = type;
-        this.baseAttribute = baseAttribute;
-    }
-
-    public Attribute getBaseAttribute() {
-        return baseAttribute;
+        this.requirements.addAll(requirements);
+        setAttributes(attributes);
     }
 
     public String toString() {
-        return type + ":" + baseAttribute.name();
+        return type;
     }
 
-    public int getAttackValue(Map<Attribute,Integer> attributes) {
-        return 0;
+    public boolean isUsable(Fighter fighter) {
+        return fighter.fulfills(getRequirements());
     }
 
-    public int getDamageValue(Map<Attribute,Integer> attributes) {
-        return 0;
+    public List<Attribute> getBoni(Fighter fighter) {
+        List<Attribute> boni = new ArrayList<>();
+        boni.addAll(usageRules.stream()
+                .filter(rule -> fighter.fulfills(rule.getRequirements()))
+                .flatMap(Rule::getBonus)
+                .collect(Collectors.toList()));
+        return boni;
     }
 
-    public boolean isUsable(Map<Attribute,Integer> attributes) {
-        return false;
-    }
-
-    public Integer getDefenceValue(Map attributes) {
-        return null;
+    public Stream<Attribute> getRequirements() {
+        return requirements.stream();
     }
 }

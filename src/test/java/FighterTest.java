@@ -1,5 +1,5 @@
 import exceptions.AttributeNotPresentException;
-import logic.Attribute;
+import enums.Attribute;
 import logic.Fighter;
 import data.FighterManager;
 import org.testng.Assert;

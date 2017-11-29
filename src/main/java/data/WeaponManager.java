@@ -1,9 +1,10 @@
 package data;
 
-import logic.Attribute;
+import enums.Attribute;
 import logic.Weapon;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 public class WeaponManager extends DataManager<Weapon> {
@@ -26,17 +27,17 @@ public class WeaponManager extends DataManager<Weapon> {
     protected JSONObject encodeJSON(Weapon weapon) {
         JSONObject json = new JSONObject();
         json.put("type", weapon.getType());
-        json.put("baseAttribute", weapon.getBaseAttribute());
         json.put("attributes", getJsonFromAttributes(weapon.getAttributes()));
+        json.put("requirements", getJsonFromAttributes(weapon.getRequirements()));
         return json;
     }
 
     @Override
     protected Weapon decodeJSON(JSONObject json) {
         String type = json.getString("type");
-        Attribute baseAttribute = Attribute.valueOf(json.getString("baseAttribute"));
-        Map<Attribute, Integer> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
-        return new Weapon(type, baseAttribute, attributes);
+        List<Attribute> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
+        List<Attribute> requirements = this.getAttributesFromJSON(json.getJSONObject("requirements"));
+        return new Weapon(type, requirements, attributes);
     }
 }
 

@@ -1,10 +1,11 @@
-package logic;
+package enums;
 
 public enum Dice {
 
     HIGH(3),
     MIDDLE(2),
-    LOW(1);
+    LOW(1),
+    ZERO(0);
 
     int max;
 

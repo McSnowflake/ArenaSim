@@ -1,7 +1,7 @@
 package data;
 
+import enums.Attribute;
 import logic.ArenaObject;
-import logic.Attribute;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,11 +10,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.*;
+import java.util.logging.Formatter;
+import java.util.stream.Stream;
 
 abstract class DataManager<T extends ArenaObject> {
 
@@ -33,7 +32,6 @@ abstract class DataManager<T extends ArenaObject> {
     }
 
     private ArrayList<T> objectList = new ArrayList<>();
-
 
     public ArrayList<T> getList() {
         return objectList;
@@ -70,7 +68,7 @@ abstract class DataManager<T extends ArenaObject> {
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
         for (T object : objectList) {
-             array.put(encodeJSON(object));
+            array.put(encodeJSON(object));
         }
         json.put("list", array);
 
@@ -87,23 +85,21 @@ abstract class DataManager<T extends ArenaObject> {
 
     protected abstract T decodeJSON(JSONObject json);
 
-    JSONObject getJsonFromAttributes(Map<Attribute, Integer> attributes) {
+    JSONObject getJsonFromAttributes(Stream<Attribute> attributes) {
         JSONObject jsonObject = new JSONObject();
-        for (Map.Entry<Attribute, Integer> attribute : attributes.entrySet()) {
-            jsonObject.put(attribute.getKey().name(), attribute.getValue());
-        }
+        attributes.forEach(attribute -> jsonObject.put(attribute.name(), attribute.getValue()));
         return jsonObject;
     }
 
-    Map<Attribute, Integer> getAttributesFromJSON(JSONObject json) {
-        Map<Attribute, Integer> attributes = new HashMap<>();
+    List<Attribute> getAttributesFromJSON(JSONObject json) {
+        List<Attribute> attributes = new ArrayList<>();
         Iterator<String> iterator = json.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();
             try {
                 Attribute attribute = Attribute.valueOf(key);
-                Integer value = json.getInt(key);
-                attributes.put(attribute, value);
+                attribute.setValue(json.getInt(key));
+                attributes.add(attribute);
             } catch (IllegalArgumentException iae) {
                 LOG.warning("Unknown attribute in json: " + key);
             }

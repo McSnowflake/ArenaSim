@@ -1,6 +1,6 @@
+import enums.Attribute;
 import exceptions.AttributeNotPresentException;
 import exceptions.NoWeaponException;
-import logic.Attribute;
 import logic.Fighter;
 import logic.Weapon;
 import org.testng.annotations.Test;
@@ -18,11 +18,11 @@ public class FightTest extends AbstractTest {
         warrior = new Fighter("Warrior", 12, 8, 21, 5);
         rogue = new Fighter("Roque", 9, 13, 17, 3);
 
-        sword = new Weapon("Sword", Attribute.Agility, 6, 4, 6);
-        club = new Weapon("Club", Attribute.Strength, 4, 2, 8);
+        sword = new Weapon("Sword", 6, 4, 6);
+        club = new Weapon("Club", 4, 2, 8);
 
-        warrior.setWeapon(club);
-        rogue.setWeapon(sword);
+        warrior.equip(club);
+        rogue.equip(sword);
     }
 
     @Test
