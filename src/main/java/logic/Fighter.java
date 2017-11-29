@@ -28,21 +28,21 @@ public class Fighter extends ArenaObject {
     public boolean setWeapon(Weapon weapon) {
         if (fulfills(weapon.getBaseAttribute(), 10)) {
             this.weapon = weapon;
-            LOG.info(type + " is now armed with a " + weapon.getType());
+            LOG.fine(type + " is now armed with a " + weapon.getType());
             return true;
         }
-        LOG.warning(type + " could not hold a " + weapon.getType() + " : " + weapon.getBaseAttribute() + " to low");
+        LOG.fine(type + " could not hold a " + weapon.getType() + " : " + weapon.getBaseAttribute() + " to low");
         return false;
     }
 
     public void attack(Fighter target) throws NoWeaponException, AttributeNotPresentException {
         int attackValue = this.getAttackValue();
-        LOG.info(this.type + " attacks " + target.type);
+        LOG.fine(this.type + " attacks " + target.type);
         if (!target.defend(attackValue)) {
             int damageValue = weapon.getAttribute(Attribute.DamageValue);
             target.receive(damageValue);
         } else {
-            LOG.info(target.type + " parried");
+            LOG.fine(target.type + " parried");
         }
     }
 
@@ -51,17 +51,17 @@ public class Fighter extends ArenaObject {
         if (damage > 0) {
             int currentHealth = getAttribute(Attribute.Health);
             attributes.put(Attribute.Health, currentHealth - damage);
-            LOG.info(this.type + " received " + damage + " damage and has now " + this.getAttribute(Attribute.Health));
+            LOG.fine(this.type + " received " + damage + " damage and has now " + this.getAttribute(Attribute.Health));
         } else {
-            LOG.info("damage blocked by armor");
+            LOG.fine("damage blocked by armor");
 
         }
     }
 
-    private boolean defend(int attackvalue) throws NoWeaponException, AttributeNotPresentException {
+    private boolean defend(int attackValue) throws NoWeaponException, AttributeNotPresentException {
         try {
-            int defensValue = getAttribute(Attribute.Agility) + weapon.getAttribute(Attribute.DefenceBonus);
-            return defensValue >= attackvalue;
+            int defensValue = getAttribute(Attribute.Agility) + weapon.getAttribute(Attribute.DefenceBonus) + Dice.HIGH.roll();
+            return defensValue >= attackValue;
         } catch (NullPointerException npe) {
             throw new NoWeaponException();
         }
@@ -69,7 +69,7 @@ public class Fighter extends ArenaObject {
 
     private int getAttackValue() throws NoWeaponException, AttributeNotPresentException {
         try {
-            return getAttribute(weapon.getBaseAttribute()) + weapon.getAttribute(Attribute.AttackBonus);
+            return getAttribute(weapon.getBaseAttribute()) + weapon.getAttribute(Attribute.AttackBonus) + Dice.HIGH.roll();
         } catch (NullPointerException npe) {
             throw new NoWeaponException();
         }

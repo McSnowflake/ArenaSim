@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeaponTest {
+public class WeaponTest extends AbstractTest  {
 
     private static String pathToSample = "src/test/resources/weapon_test.json";
     Weapon sword = new Weapon("Sword", Attribute.Agility, 3, 4, 2);

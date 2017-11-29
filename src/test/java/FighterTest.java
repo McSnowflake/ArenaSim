@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FighterTest {
+public class FighterTest extends AbstractTest  {
 
     private static String pathToSample = "src/test/resources/fighter_test.json";
     private Fighter warrior = new Fighter("Warrior", 12, 8, 21, 3);

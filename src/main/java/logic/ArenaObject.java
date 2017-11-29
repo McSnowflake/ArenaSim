@@ -11,6 +11,7 @@ public abstract class ArenaObject<T extends ArenaObject> {
     protected static Logger LOG = Logger.getAnonymousLogger();
 
     static {
+        LOG.setLevel(Level.INFO);
         LOG.setUseParentHandlers(false);
         Handler conHdlr = new ConsoleHandler();
         conHdlr.setFormatter(new Formatter() {
