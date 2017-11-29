@@ -26,20 +26,23 @@ public class Fighter extends ArenaObject {
     }
 
     public boolean setWeapon(Weapon weapon) {
-        if (fulfills(weapon.getBaseAttribute(), 10)) {
+        if (weapon.isUsable(attributes)) {
             this.weapon = weapon;
             LOG.fine(type + " is now armed with a " + weapon.getType());
             return true;
         }
-        LOG.fine(type + " could not hold a " + weapon.getType() + " : " + weapon.getBaseAttribute() + " to low");
+        LOG.fine(type + " could not use a " + weapon.getType() + " : " + weapon.getBaseAttribute() + " to low");
         return false;
     }
 
     public void attack(Fighter target) throws NoWeaponException, AttributeNotPresentException {
-        int attackValue = this.getAttackValue();
+
+        int fighterAttackValue = this.getAttackValue();
+        int weaponAttackValue = weapon.getAttackValue(attributes);
+
         LOG.fine(this.type + " attacks " + target.type);
-        if (!target.defend(attackValue)) {
-            int damageValue = weapon.getAttribute(Attribute.DamageValue);
+        if (!target.defend(fighterAttackValue+weaponAttackValue)) {
+            int damageValue = weapon.getDamageValue(attributes);
             target.receive(damageValue);
         } else {
             LOG.fine(target.type + " parried");
