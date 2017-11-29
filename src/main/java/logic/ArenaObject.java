@@ -2,16 +2,16 @@ package logic;
 
 import exceptions.AttributeNotPresentException;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.*;
 
-public class ArenaObject {
+public abstract class ArenaObject<T extends ArenaObject> {
 
     protected static Logger LOG = Logger.getAnonymousLogger();
 
     static {
+        LOG.setLevel(Level.INFO);
         LOG.setUseParentHandlers(false);
         Handler conHdlr = new ConsoleHandler();
         conHdlr.setFormatter(new Formatter() {
@@ -23,22 +23,31 @@ public class ArenaObject {
 
     }
 
-    @XmlAttribute
     protected String type;
-    @XmlElement
-    protected Map<Attribute, Integer> attributes;
-    private Weapon weapon = null;
+    protected Map<Attribute, Integer> attributes = new HashMap<>();
 
     public String getType() {
         return type;
     }
 
-    public int getAttribute(Attribute key) throws AttributeNotPresentException {
-        Integer value = attributes.get(key);
-        if (value == null)
-            throw new AttributeNotPresentException();
-        else
+    public <T extends ArenaObject> T setAttribute(Attribute attribute, Integer value) {
+        attributes.put(attribute, value);
+        return (T) this;
+    }
+
+    public Integer getAttribute(Attribute key) throws AttributeNotPresentException {
+
+        if (attributes.containsKey(key))
             return attributes.get(key);
+        throw new AttributeNotPresentException();
+
+    }
+
+    public Map<Attribute, Integer> getAttributes() {
+        Map<Attribute, Integer> copy = new HashMap<>();
+        copy.putAll(attributes);
+        return copy;
+
     }
 
     public boolean fulfills(Attribute attribute, int value) {
