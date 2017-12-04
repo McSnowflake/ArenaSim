@@ -31,7 +31,7 @@ public class FighterManager extends DataManager<Fighter> {
 
     @Override protected Fighter decodeJSON(JSONObject json) {
         String type = json.getString("type");
-        List<Attribute> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
+        Map<Attribute, Integer> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
         return new Fighter(type, attributes);
 
     }

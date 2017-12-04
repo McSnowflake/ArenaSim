@@ -16,13 +16,22 @@ public class FightTest extends AbstractTest {
     private void init() {
 
         warrior = new Fighter("Warrior", 12, 8, 21, 5);
+        warrior.printAttributes();
+
         rogue = new Fighter("Roque", 9, 13, 17, 3);
 
         sword = new Weapon("Sword", 6, 4, 6);
         club = new Weapon("Club", 4, 2, 8);
 
+        warrior.printAttributes();
+        rogue.printAttributes();
+
         warrior.equip(club);
         rogue.equip(sword);
+
+        warrior.printAttributes();
+        rogue.printAttributes();
+
     }
 
     @Test

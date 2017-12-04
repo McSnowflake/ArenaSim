@@ -5,7 +5,7 @@ import enums.Dice;
 import exceptions.AttributeNotPresentException;
 import exceptions.NoWeaponException;
 
-import java.util.List;
+import java.util.Map;
 
 public class Fighter extends ArenaObject {
 
@@ -20,13 +20,13 @@ public class Fighter extends ArenaObject {
     public Fighter(String type, Integer strength, Integer agility, Integer health, Integer armor) {
 
         this.type = type;
-        setAttribute(Attribute.Strength.setValue(strength));
-        setAttribute(Attribute.Agility.setValue(agility));
-        setAttribute(Attribute.Health.setValue(health));
-        setAttribute(Attribute.Armor.setValue(armor));
+        setAttribute(Attribute.Strength, strength);
+        setAttribute(Attribute.Agility, agility);
+        setAttribute(Attribute.Health, health);
+        setAttribute(Attribute.Armor, armor);
     }
 
-    public Fighter(String type, List<Attribute> attributes) {
+    public Fighter(String type, Map<Attribute, Integer> attributes) {
 
         this.type = type;
         setAttributes(attributes);
@@ -38,10 +38,18 @@ public class Fighter extends ArenaObject {
             LOG.fine(type + " could not use a " + weapon.getType());
             return false;
         }
+        if (this.weapon != null)
+            this.weapon.getBoni(this).forEach(this::subAttribute);
+
         this.weapon = weapon;
         weapon.getBoni(this).forEach(this::addAttribute);
-        LOG.fine(type + " could not use a " + weapon.getType());
+        LOG.fine(type + " equipped " + weapon.getType());
         return true;
+    }
+
+    public void printAttributes() {
+        System.out.println(getType());
+        getAttributes().forEach(attribute -> System.out.println(attribute.getKey().name() + " : " + attribute.getValue()));
     }
 
     public void attack(Fighter target) throws NoWeaponException, AttributeNotPresentException {
@@ -58,7 +66,7 @@ public class Fighter extends ArenaObject {
         int damage = hitValue - armor;
         if (damage > 0) {
             int currentHealth = getAttribute(Attribute.Health);
-            setAttribute(Attribute.Health.setValue(currentHealth - damage));
+            setAttribute(Attribute.Health,currentHealth - damage);
             LOG.fine(this.type + " received " + damage + " damage and has now " + this.getAttribute(Attribute.Health));
         } else {
             LOG.fine("damage blocked by armor");

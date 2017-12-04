@@ -1,6 +1,7 @@
 package data;
 
 import enums.Attribute;
+import exceptions.ObjectNotFoundException;
 import logic.ArenaObject;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -31,10 +32,19 @@ abstract class DataManager<T extends ArenaObject> {
 
     }
 
-    private ArrayList<T> objectList = new ArrayList<>();
+    private Map<String, T> objectList = new HashMap<>();
 
-    public ArrayList<T> getList() {
-        return objectList;
+    public List<T> getList() {
+        return new ArrayList<>(objectList.values());
+    }
+
+    public T get(String key) throws ObjectNotFoundException {
+
+        if (objectList.containsKey(key))
+            return objectList.get(key);
+
+        LOG.warning(key + " not found");
+        throw new ObjectNotFoundException(key);
     }
 
     protected void loadJSON(String filePath) {
@@ -48,26 +58,22 @@ abstract class DataManager<T extends ArenaObject> {
             JSONArray elements = json.getJSONArray("list");
             for (int i = 0; i < elements.length(); i++) {
                 T element = decodeJSON(elements.getJSONObject(i));
-                objectList.add(element);
+                objectList.put(element.getType(), element);
             }
         } catch (IOException e) {
-            System.out.println("Creating new weapon json.");
-            json = new JSONObject();
+            LOG.warning(filePath + " not found. Empty dataManager created");
         }
-
-        // docode to list
-        // TODO objectList = ...;
     }
 
     public void add(T object) {
-        objectList.add(object);
+        objectList.put(object.getType(), object);
     }
 
     public void save2File(String path2json) throws IOException {
 
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
-        for (T object : objectList) {
+        for (T object : objectList.values()) {
             array.put(encodeJSON(object));
         }
         json.put("list", array);
@@ -85,21 +91,19 @@ abstract class DataManager<T extends ArenaObject> {
 
     protected abstract T decodeJSON(JSONObject json);
 
-    JSONObject getJsonFromAttributes(Stream<Attribute> attributes) {
+    JSONObject getJsonFromAttributes(Stream<Map.Entry<Attribute, Integer>> attributes) {
         JSONObject jsonObject = new JSONObject();
-        attributes.forEach(attribute -> jsonObject.put(attribute.name(), attribute.getValue()));
+        attributes.forEach(attribute -> jsonObject.put(attribute.getKey().name(), attribute.getValue()));
         return jsonObject;
     }
 
-    List<Attribute> getAttributesFromJSON(JSONObject json) {
-        List<Attribute> attributes = new ArrayList<>();
+    Map<Attribute, Integer> getAttributesFromJSON(JSONObject json) {
+        Map<Attribute, Integer> attributes = new HashMap<>();
         Iterator<String> iterator = json.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();
             try {
-                Attribute attribute = Attribute.valueOf(key);
-                attribute.setValue(json.getInt(key));
-                attributes.add(attribute);
+                attributes.put(Attribute.valueOf(key), json.getInt(key));
             } catch (IllegalArgumentException iae) {
                 LOG.warning("Unknown attribute in json: " + key);
             }

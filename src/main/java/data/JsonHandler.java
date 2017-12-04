@@ -1,4 +1,7 @@
-package logic;
+package data;
+
+import logic.Weapon;
+import logic.WeaponList;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

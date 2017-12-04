@@ -1,5 +1,7 @@
 package logic;
 
+import data.DataList;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,7 +11,7 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "weapons")
-public class WeaponList extends DataList{
+public class WeaponList extends DataList {
 
     @XmlElement(name = "weapon", type = Weapon.class)
     private ArrayList<Weapon> weapons = new ArrayList<>();

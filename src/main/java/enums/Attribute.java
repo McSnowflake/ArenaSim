@@ -9,15 +9,4 @@ public enum Attribute {
     Defence,
     Damage,
     Armor;
-
-    private int value = 0;
-
-    public int getValue() {
-        return value;
-    }
-
-    public Attribute setValue(int value) {
-        this.value = value;
-        return this;
-    }
 }

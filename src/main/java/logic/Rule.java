@@ -2,21 +2,18 @@ package logic;
 
 import enums.Attribute;
 
-import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class Rule {
-    private List<Attribute> requirements;
-    private List<Attribute> bonus;
+    private Map<Attribute, Integer> requirements;
+    private Map<Attribute, Integer> bonus;
 
-
-
-    public Stream<Attribute> getRequirements() {
-        return requirements.stream();
+    public Stream<Map.Entry<Attribute, Integer>> getRequirements() {
+        return requirements.entrySet().stream();
     }
 
-
-    public Stream<Attribute> getBonus() {
-        return bonus.stream();
+    public Stream<Map.Entry<Attribute, Integer>> getBonus() {
+        return bonus.entrySet().stream();
     }
 }

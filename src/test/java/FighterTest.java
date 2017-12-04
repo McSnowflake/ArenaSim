@@ -41,7 +41,7 @@ public class FighterTest extends AbstractTest  {
     public void loadingTest() throws AttributeNotPresentException {
 
         FighterManager fighterManager = new FighterManager(pathToSample);
-        ArrayList<Fighter> fighters = fighterManager.getList();
+        List<Fighter> fighters = fighterManager.getList();
 
         Assert.assertEquals(fighters.size(), 2);
 

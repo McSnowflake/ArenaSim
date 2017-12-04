@@ -35,8 +35,8 @@ public class WeaponManager extends DataManager<Weapon> {
     @Override
     protected Weapon decodeJSON(JSONObject json) {
         String type = json.getString("type");
-        List<Attribute> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
-        List<Attribute> requirements = this.getAttributesFromJSON(json.getJSONObject("requirements"));
+        Map<Attribute,Integer> attributes = this.getAttributesFromJSON(json.getJSONObject("attributes"));
+        Map<Attribute,Integer> requirements = this.getAttributesFromJSON(json.getJSONObject("requirements"));
         return new Weapon(type, requirements, attributes);
     }
 }

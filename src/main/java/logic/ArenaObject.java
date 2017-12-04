@@ -2,8 +2,8 @@ package logic;
 
 import enums.Attribute;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.*;
 import java.util.stream.Stream;
 
@@ -25,41 +25,39 @@ public abstract class ArenaObject {
     }
 
     protected String type;
-    private List<Attribute> attributes = new ArrayList<>();
+    private Map<Attribute, Integer> attributes = new HashMap<>();
 
     public String getType() {
         return type;
     }
 
     public Integer getAttribute(Attribute key) {
-        int index = attributes.indexOf(key);
-        if (index >= 0)
-            return attributes.get(index).getValue();
+        if (attributes.containsKey(key))
+            return attributes.get(key);
         return 0;
     }
 
-    public void setAttribute(Attribute attribute) {
-        int index = attributes.indexOf(attribute);
-        if (index >= 0)
-            attributes.set(index, attribute);
-        else
-            attributes.add(attribute);
+    public void setAttribute(Attribute attribute, Integer value) {
+        attributes.put(attribute, value);
     }
 
-    public Stream<Attribute> getAttributes() {
-        return attributes.stream();
+    public Stream<Map.Entry<Attribute, Integer>> getAttributes() {
+        return attributes.entrySet().stream();
     }
 
-    public boolean fulfills(Stream<Attribute> requirements) {
-
-        return requirements.allMatch(requirement -> getAttribute(requirement) >= requirement.getValue());
+    public boolean fulfills(Stream<Map.Entry<Attribute, Integer>> requirements) {
+        return requirements.allMatch(requirement -> requirement.getValue() >= getAttribute(requirement.getKey()));
     }
 
-    void setAttributes(List<Attribute> attributes) {
+    void setAttributes(Map<Attribute, Integer> attributes) {
         attributes.forEach(this::setAttribute);
     }
 
-    public void addAttribute(Attribute attribute) {
-        setAttribute(attribute.setValue(attribute.getValue() + getAttribute(attribute)));
+    public void addAttribute(Attribute attribute, Integer value) {
+        setAttribute(attribute, value + getAttribute(attribute));
+    }
+
+    protected void subAttribute(Attribute attribute, Integer value) {
+        setAttribute(attribute, value - getAttribute(attribute));
     }
 }

@@ -38,7 +38,7 @@ public class WeaponTest extends AbstractTest {
     public void loadingTest() throws AttributeNotPresentException {
 
         WeaponManager weaponManager = new WeaponManager(pathToSample);
-        ArrayList<Weapon> weapons = weaponManager.getList();
+        List<Weapon> weapons = weaponManager.getList();
 
         List<Attribute> attributes2Test = new ArrayList<>();
         attributes2Test.add(Attribute.Attack);
@@ -57,10 +57,9 @@ public class WeaponTest extends AbstractTest {
             default:
                 throw new AssertionError("Weapon not expected");
             }
-            for (Attribute attribute : attributes2Test) {
-                Assert.assertEquals(weapon.getAttribute(attribute), wut.getAttribute(attribute));
-            }
-        }
 
+            attributes2Test.forEach(attribute -> Assert.assertEquals(weapon.getAttribute(attribute), wut.getAttribute(attribute)));
+        }
     }
 }
+

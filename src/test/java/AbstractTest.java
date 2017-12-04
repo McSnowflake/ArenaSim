@@ -5,7 +5,7 @@ public class AbstractTest {
     protected static Logger LOG = Logger.getAnonymousLogger();
 
     static {
-        LOG.setLevel(Level.INFO);
+        LOG.setLevel(Level.FINE);
         LOG.setUseParentHandlers(false);
         Handler conHdlr = new ConsoleHandler();
         conHdlr.setFormatter(new Formatter() {
