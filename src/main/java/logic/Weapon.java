@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class Weapon extends ArenaObject {
 
     private Map<Attribute, Integer> requirements = new HashMap<>();
-    // TODO
+
     private List<Rule> usageRules = new ArrayList<>();
 
     public Weapon(String type, int attack, int defence, int damage) {
@@ -36,6 +36,11 @@ public class Weapon extends ArenaObject {
     }
 
     public boolean isUsable(Fighter fighter) {
+
+        if (getRequirements().count() == 0){
+            return true;
+        }
+
         return fighter.fulfills(getRequirements());
     }
 
@@ -50,5 +55,9 @@ public class Weapon extends ArenaObject {
 
     public Stream<Map.Entry<Attribute, Integer>> getRequirements() {
         return requirements.entrySet().stream();
+    }
+
+    public void addRule(Rule rule){
+        this.usageRules.add(rule);
     }
 }

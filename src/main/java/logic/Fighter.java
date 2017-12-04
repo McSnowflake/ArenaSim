@@ -34,7 +34,7 @@ public class Fighter extends ArenaObject {
 
     public boolean equip(Weapon weapon) {
 
-        if (weapon.isUsable(this)) {
+        if (!weapon.isUsable(this)) {
             LOG.fine(type + " could not use a " + weapon.getType());
             return false;
         }
@@ -45,11 +45,6 @@ public class Fighter extends ArenaObject {
         weapon.getBoni(this).forEach(this::addAttribute);
         LOG.fine(type + " equipped " + weapon.getType());
         return true;
-    }
-
-    public void printAttributes() {
-        System.out.println(getType());
-        getAttributes().forEach(attribute -> System.out.println(attribute.getKey().name() + " : " + attribute.getValue()));
     }
 
     public void attack(Fighter target) throws NoWeaponException, AttributeNotPresentException {

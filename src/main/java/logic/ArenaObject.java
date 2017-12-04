@@ -46,6 +46,7 @@ public abstract class ArenaObject {
     }
 
     public boolean fulfills(Stream<Map.Entry<Attribute, Integer>> requirements) {
+
         return requirements.allMatch(requirement -> requirement.getValue() >= getAttribute(requirement.getKey()));
     }
 
@@ -59,5 +60,10 @@ public abstract class ArenaObject {
 
     protected void subAttribute(Attribute attribute, Integer value) {
         setAttribute(attribute, value - getAttribute(attribute));
+    }
+
+    public void printAttributes() {
+        System.out.println(getType());
+        getAttributes().forEach(attribute -> System.out.println(attribute.getKey().name() + " : " + attribute.getValue()));
     }
 }
