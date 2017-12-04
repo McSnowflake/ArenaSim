@@ -38,10 +38,12 @@ public class Fighter extends ArenaObject {
             LOG.fine(type + " could not use a " + weapon.getType());
             return false;
         }
-        if (this.weapon != null)
+        if (this.weapon != null) {
+            weapon.getAttributes().forEach(this::subAttribute);
             this.weapon.getBoni(this).forEach(this::subAttribute);
-
+        }
         this.weapon = weapon;
+        weapon.getAttributes().forEach(this::addAttribute);
         weapon.getBoni(this).forEach(this::addAttribute);
         LOG.fine(type + " equipped " + weapon.getType());
         return true;

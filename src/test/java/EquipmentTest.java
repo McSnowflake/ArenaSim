@@ -74,7 +74,14 @@ public class EquipmentTest extends AbstractTest {
         Assert.assertEquals((int)warrior.getAttribute(Attribute.Defence), 4, "Defence value has Bonus.");
         Assert.assertEquals((int)warrior.getAttribute(Attribute.Damage), 6, "Damage value has Bonus.");
 
+        Fighter warrior2 = new Fighter("Warrior", 13, 9, 21, 5);
+        warrior2.printAttributes();
 
+        warrior2.equip(sword);
+
+        Assert.assertEquals((int)warrior2.getAttribute(Attribute.Attack), 10, "Attack value has Bonus.");
+        Assert.assertEquals((int)warrior2.getAttribute(Attribute.Defence), 10, "Defence value has Bonus.");
+        Assert.assertEquals((int)warrior2.getAttribute(Attribute.Damage), 10, "Damage value has Bonus.");
 
     }
 }

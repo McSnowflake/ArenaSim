@@ -57,9 +57,16 @@ public abstract class ArenaObject {
     public void addAttribute(Attribute attribute, Integer value) {
         setAttribute(attribute, value + getAttribute(attribute));
     }
+    public void addAttribute(Map.Entry<Attribute , Integer> value) {
+        setAttribute(value.getKey(), value.getValue() + getAttribute(value.getKey()));
+    }
 
     protected void subAttribute(Attribute attribute, Integer value) {
         setAttribute(attribute, value - getAttribute(attribute));
+    }
+
+    public void subAttribute(Map.Entry<Attribute , Integer> value) {
+        setAttribute(value.getKey(), value.getValue() - getAttribute(value.getKey()));
     }
 
     public void printAttributes() {
