@@ -1,7 +1,9 @@
-import exceptions.AttributeNotPresentException;
-import enums.Attribute;
-import logic.Fighter;
 import data.FighterManager;
+import exceptions.AttributeNotPresentException;
+import exceptions.EquipmentNotSuitableException;
+import exceptions.EquipmentTypeNotKnownException;
+import logic.Fighter;
+import numbers.Attribute;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -9,20 +11,22 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class FighterTest extends AbstractTest  {
+public class FighterTest extends AbstractTest {
 
     private static String pathToSample = "src/test/resources/fighter_test.json";
-    private Fighter warrior = new Fighter("Warrior", 12, 8, 21, 3);
-    private Fighter rogue = new Fighter("Rogue", 9, 12, 17, 2);
+    private Fighter warrior;
+    private Fighter rogue;
 
     @BeforeTest
-    public void cleanUp() {
+    public void cleanUp() throws EquipmentTypeNotKnownException, EquipmentNotSuitableException {
         File testFile = new File(pathToSample);
         if (testFile.exists())
             testFile.delete();
-
+        init();
     }
 
     @Test
@@ -55,10 +59,10 @@ public class FighterTest extends AbstractTest  {
 
             Fighter fut;
             switch (fighter.getType()) {
-            case "Warrior":
+            case Warrior:
                 fut = warrior;
                 break;
-            case "Rogue":
+            case Rogue:
                 fut = rogue;
                 break;
             default:
@@ -69,5 +73,22 @@ public class FighterTest extends AbstractTest  {
             }
 
         }
+    }
+
+    private void init() throws EquipmentTypeNotKnownException, EquipmentNotSuitableException {
+
+        // create warrior
+        Map<Attribute, Integer> attributes = new HashMap<>();
+        attributes.put(Attribute.Strength, 12);
+        attributes.put(Attribute.Agility, 9);
+        attributes.put(Attribute.Defence, 1);
+        warrior = new Fighter(Fighter.Type.Warrior, Fighter.Class.Human, attributes);
+
+        // create rogue
+        attributes = new HashMap<>();
+        attributes.put(Attribute.Strength, 9);
+        attributes.put(Attribute.Agility, 12);
+        attributes.put(Attribute.Defence, 1);
+        rogue = new Fighter(Fighter.Type.Rogue, Fighter.Class.Human, attributes);
     }
 }

@@ -1,22 +1,24 @@
-import data.FighterManager;
-import data.WeaponManager;
-import enums.Dice;
-import exceptions.AttributeNotPresentException;
-import exceptions.ObjectNotFoundException;
+import exceptions.EquipmentNotSuitableException;
+import exceptions.EquipmentTypeNotKnownException;
 import logic.Fighter;
-import logic.Rule;
 import logic.Weapon;
-import enums.Attribute;
+import numbers.Attribute;
+import numbers.Die;
+import numbers.Rule;
+import numbers.Value;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static numbers.Attribute.Agility;
+import static numbers.Attribute.Strength;
 
 public class EquipmentTest extends AbstractTest {
-
-    private FighterManager fighterManager = new FighterManager("src/test/resources/equipment_test_fighters.json");
-    private WeaponManager weaponManager = new WeaponManager("src/test/resources/equipment_test_weapons.json");
 
     private Fighter warrior;
     private Fighter rogue;
@@ -25,63 +27,78 @@ public class EquipmentTest extends AbstractTest {
     private Weapon club;
 
     @BeforeTest
-    public void init() throws ObjectNotFoundException {
-        warrior = fighterManager.get("Warrior");
-        rogue = fighterManager.get("Rogue");
+    private void init() throws EquipmentTypeNotKnownException, EquipmentNotSuitableException {
 
-        sword = weaponManager.get("Sword");
-        club = weaponManager.get("Club");
+        // create warrior
+        Map<Attribute, Integer> attributes = new HashMap<>();
+        attributes.put(Strength, 12);
+        attributes.put(Agility, 9);
+        attributes.put(Attribute.Defence, 1);
+        warrior = new Fighter(Fighter.Type.Warrior, Fighter.Class.Human, attributes);
 
+        // create rogue
+        attributes = new HashMap<>();
+        attributes.put(Strength, 9);
+        attributes.put(Agility, 12);
+        attributes.put(Attribute.Defence, 1);
+        rogue = new Fighter(Fighter.Type.Rogue, Fighter.Class.Human, attributes);
 
+        // create sword
+        List<Rule> rules = new ArrayList<>();
+        Map<Attribute, Integer> baseRequirement = new HashMap<>();
+        baseRequirement.put(Agility, 9);
+        baseRequirement.put(Strength, 9);
+        Map<Attribute, Value> baseAttribute = new HashMap<>();
+        baseAttribute.put(Attribute.Attack, new Value(Die.LOW));
+        rules.add(new Rule(baseRequirement, baseAttribute, true));
+        Map<Attribute, Integer> bonusRequirement = new HashMap<>();
+        bonusRequirement.put(Agility, 12);
+        Map<Attribute, Value> bonusAttribute = new HashMap<>();
+        bonusAttribute.put(Attribute.Attack, new Value(2));
+        rules.add(new Rule(bonusRequirement, bonusAttribute, false));
+        sword = new Weapon("Sword", Weapon.Type.cutting, Agility, rules);
+
+        // create club
+        rules = new ArrayList<>();
+        baseRequirement = new HashMap<>();
+        baseRequirement.put(Strength, 10);
+        baseRequirement.put(Agility, 8);
+        baseAttribute = new HashMap<>();
+        baseAttribute.put(Attribute.Attack, new Value(Die.LOW));
+        rules.add(new Rule(baseRequirement, baseAttribute, true));
+        bonusRequirement = new HashMap<>();
+        bonusRequirement.put(Strength, 13);
+        bonusAttribute = new HashMap<>();
+        bonusAttribute.put(Attribute.Attack, new Value(2));
+        rules.add(new Rule(bonusRequirement, bonusAttribute, false));
+        club = new Weapon("Club", Weapon.Type.beating, Strength, rules);
+
+        warrior.equip(club);
+        rogue.equip(sword);
     }
 
     @Test
-    public void requirementsTest() {
+    public void requirementsTest() throws EquipmentTypeNotKnownException {
 
-        Assert.assertFalse(warrior.equip(sword));
+        Assert.assertTrue(warrior.equip(sword));
         Assert.assertTrue(warrior.equip(club));
         Assert.assertTrue(rogue.equip(sword));
         Assert.assertFalse(rogue.equip(club));
     }
 
     @Test
-    public void weaponBonusTest() {
+    public void weaponBonusTest() throws EquipmentTypeNotKnownException {
 
-        warrior = new Fighter("Warrior", 12, 8, 21, 5);
+        warrior.equip(club);
         warrior.printAttributes();
 
-        sword = new Weapon("Sword", 6, 4, 6);
-        sword.printAttributes();
+        Assert.assertEquals(warrior.getAttribute(Attribute.Attack), new Value(Die.LOW), "Attack != Base.");
 
-        HashMap<Attribute, Integer> ruleRequ = new HashMap<>();
-        ruleRequ.put(Attribute.Agility, 9);
-        ruleRequ.put(Attribute.Strength, 13);
+        warrior.alterBaseAttribute(Strength, 1);
+        warrior.calcStats();
+        warrior.printAttributes();
 
-        HashMap<Attribute, Integer> ruleBonus = new HashMap<>();
-        ruleRequ.put(Attribute.Attack, 4);
-        ruleRequ.put(Attribute.Defence, 6);
-        ruleRequ.put(Attribute.Damage, 4);
-
-        Dice bonusDice = Dice.HIGH;
-
-        Rule rule = new Rule(ruleRequ, ruleBonus, bonusDice);
-
-        sword.addRule(rule);
-
-        Assert.assertTrue(warrior.equip(sword), "Succesfully equipped sword.");
-
-        Assert.assertEquals((int)warrior.getAttribute(Attribute.Attack), 6, "Attack value has Bonus.");
-        Assert.assertEquals((int)warrior.getAttribute(Attribute.Defence), 4, "Defence value has Bonus.");
-        Assert.assertEquals((int)warrior.getAttribute(Attribute.Damage), 6, "Damage value has Bonus.");
-
-        Fighter warrior2 = new Fighter("Warrior", 13, 9, 21, 5);
-        warrior2.printAttributes();
-
-        warrior2.equip(sword);
-
-        Assert.assertEquals((int)warrior2.getAttribute(Attribute.Attack), 10, "Attack value has Bonus.");
-        Assert.assertEquals((int)warrior2.getAttribute(Attribute.Defence), 10, "Defence value has Bonus.");
-        Assert.assertEquals((int)warrior2.getAttribute(Attribute.Damage), 10, "Damage value has Bonus.");
+        Assert.assertEquals(warrior.getAttribute(Attribute.Attack), new Value(Die.LOW, 2), "Attack != Bonus.");
 
     }
 }

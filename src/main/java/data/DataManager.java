@@ -1,22 +1,24 @@
 package data;
 
-import enums.Attribute;
 import exceptions.ObjectNotFoundException;
-import logic.ArenaObject;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import numbers.Attribute;
+import numbers.Rule;
+import numbers.Value;
 
+import javax.json.*;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.*;
-import java.util.logging.Formatter;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-abstract class DataManager<T extends ArenaObject> {
+abstract public class DataManager<T> {
 
     protected static Logger LOG = Logger.getAnonymousLogger();
 
@@ -29,7 +31,6 @@ abstract class DataManager<T extends ArenaObject> {
             }
         });
         LOG.addHandler(conHdlr);
-
     }
 
     private Map<String, T> objectList = new HashMap<>();
@@ -48,66 +49,100 @@ abstract class DataManager<T extends ArenaObject> {
     }
 
     protected void loadJSON(String filePath) {
-        JSONObject json;
-        try {
-            InputStream is = new FileInputStream(filePath);
 
-            String jsonTxt = IOUtils.toString(is, "UTF-8");
-            System.out.println(jsonTxt);
-            json = new JSONObject(jsonTxt);
-            JSONArray elements = json.getJSONArray("list");
-            for (int i = 0; i < elements.length(); i++) {
-                T element = decodeJSON(elements.getJSONObject(i));
-                objectList.put(element.getType(), element);
-            }
+        try (JsonReader jsonReader = Json.createReader(new FileInputStream(filePath))) {
+            JsonObject object = jsonReader.readObject();
+            JsonArray array = object.getJsonArray(jsonKeys.elements.name());
+            array.forEach(jsonValue -> add(decodeJSON(jsonValue.asJsonObject())));
+
         } catch (IOException e) {
             LOG.warning(filePath + " not found. Empty dataManager created");
         }
     }
 
     public void add(T object) {
-        objectList.put(object.getType(), object);
+        objectList.put(object.toString(), object);
     }
 
     public void save2File(String path2json) throws IOException {
 
-        JSONObject json = new JSONObject();
-        JSONArray array = new JSONArray();
-        for (T object : objectList.values()) {
-            array.put(encodeJSON(object));
-        }
-        json.put("list", array);
+        try (JsonWriter jsonWriter = Json.createWriter(new FileWriter(path2json))) {
 
-        try (FileWriter file = new FileWriter(path2json)) {
-            file.write(json.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + json);
+            JsonArrayBuilder objectsJSON = Json.createArrayBuilder();
+            objectList.forEach((key, value) -> objectsJSON.add(encodeJSON(value)));
+
+            JsonObjectBuilder JSON = Json.createObjectBuilder();
+            JSON.add(jsonKeys.elements.name(), objectsJSON.build());
+            JSON.add(jsonKeys.type.name(), getType());
+            JSON.add(jsonKeys.timeStamp.name(), LocalDateTime.now().toString());
+            jsonWriter.writeObject(JSON.build());
         }
     }
+
+    abstract protected String getType();
 
     protected abstract String getFilePath();
 
-    protected abstract JSONObject encodeJSON(T object);
+    protected abstract JsonObject encodeJSON(T object);
 
-    protected abstract T decodeJSON(JSONObject json);
+    abstract protected T decodeJSON(JsonObject json);
 
-    JSONObject getJsonFromAttributes(Stream<Map.Entry<Attribute, Integer>> attributes) {
-        JSONObject jsonObject = new JSONObject();
-        attributes.forEach(attribute -> jsonObject.put(attribute.getKey().name(), attribute.getValue()));
-        return jsonObject;
+    public static JsonObject getJsonFromValues(Stream<Map.Entry<Attribute, Value>> values) {
+
+        JsonObjectBuilder attributesJSON = Json.createObjectBuilder();
+        values.forEach(attribute -> attributesJSON.add(attribute.getKey().name(), attribute.getValue().toJSON()));
+        return attributesJSON.build();
     }
 
-    Map<Attribute, Integer> getAttributesFromJSON(JSONObject json) {
-        Map<Attribute, Integer> attributes = new HashMap<>();
-        Iterator<String> iterator = json.keys();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            try {
-                attributes.put(Attribute.valueOf(key), json.getInt(key));
-            } catch (IllegalArgumentException iae) {
-                LOG.warning("Unknown attribute in json: " + key);
-            }
-        }
-        return attributes;
+    public static Map<Attribute, Value> getValuesFromJSON(JsonObject valuesJSON) {
+
+        return valuesJSON.entrySet().stream()
+                .collect(Collectors.toMap(entry -> Attribute.valueOf(entry.getKey()), entry -> new Value(entry.getValue().asJsonObject())));
+    }
+
+    public static JsonObject getJsonFromAttributes(Stream<Map.Entry<Attribute, Integer>> attributes) {
+
+        JsonObjectBuilder attributesJSON = Json.createObjectBuilder();
+        attributes.forEach(attribute -> attributesJSON.add(attribute.getKey().name(), attribute.getValue()));
+        return attributesJSON.build();
+    }
+
+    public static Map<Attribute, Integer> getAttributesFromJSON(JsonObject attributesJSON) {
+
+        return attributesJSON.entrySet().stream()
+                .collect(Collectors.toMap(entry -> Attribute.valueOf(entry.getKey()), entry -> ((JsonNumber) entry.getValue()).intValue()));
+    }
+
+    public static JsonArray getJsonFromRules(Stream<Rule> rules) {
+
+        JsonArrayBuilder rulesJSON = Json.createArrayBuilder();
+        rules.forEach(rule -> rulesJSON.add(rule.toJSON()));
+        return rulesJSON.build();
+    }
+
+    public static List<Rule> getRulesFromJSON(JsonArray rulesJSON) {
+
+        return rulesJSON.stream()
+                .map(JsonValue::asJsonObject)
+                .map(Rule::new)
+                .collect(Collectors.toList());
+    }
+
+    enum type {
+        weapon,
+        armor,
+        fighter
+    }
+
+    enum jsonKeys {
+        usageRules,
+        attributes,
+        name,
+        type,
+        subType,
+        _class,
+        elements,
+        timeStamp,
+        baseAttribute
     }
 }

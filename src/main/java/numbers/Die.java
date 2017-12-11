@@ -1,6 +1,6 @@
-package enums;
+package numbers;
 
-public enum Dice {
+public enum Die {
 
     HIGH(3),
     MIDDLE(2),
@@ -9,11 +9,12 @@ public enum Dice {
 
     int max;
 
-    Dice(int max) {
+    Die(int max) {
         this.max = max;
     }
 
     public int roll() {
         return (int) Math.round(Math.random() * max);
     }
+
 }

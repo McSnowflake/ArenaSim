@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import enums.Dice;
+import numbers.Die;
 
 import javax.xml.bind.JAXBException;
 
@@ -21,7 +21,7 @@ public class Main extends Application {
 
     public static void main(String[] args) throws JAXBException {
 
-        Dice high = Dice.HIGH;
+        Die high = Die.HIGH;
         System.out.println(high.roll());
 
     }
